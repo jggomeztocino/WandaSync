@@ -1,0 +1,28 @@
+@startuml ParentProduct
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Draft : A new parent product is created with basic information.
+
+Draft : The product is being prepared and is not yet visible in the catalog.
+Draft --> Active : Product information is completed and approved.
+
+Active : The product is available and visible to customers.
+Active --> OnSale : A promotion is applied to the product.
+
+OnSale : The product is active and currently on sale.
+OnSale --> Active : Promotion ends or is removed.
+
+Active --> Discontinued : Product is no longer produced or supported.
+
+Discontinued : The product is discontinued and not available for new variations.
+Discontinued --> Inactive : Product is archived after a certain period.
+
+Active --> Inactive : Product is manually deactivated.
+
+Inactive : The product is archived and not visible in the catalog.
+Inactive --> Active : Product is reactivated.
+
+Inactive --> [*] : Product is permanently removed from the system.
+
+@enduml

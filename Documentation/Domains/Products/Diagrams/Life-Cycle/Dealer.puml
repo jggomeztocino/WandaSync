@@ -1,0 +1,18 @@
+@startuml Dealer
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Active : Dealer is added to the system.
+
+Active : Dealer is active and supplying products.
+Active --> Inactive : Dealer is temporarily deactivated.
+
+Inactive : Dealer is not currently supplying products.
+Inactive --> Active : Dealer is reactivated.
+
+Active --> Terminated : Dealer relationship is terminated.
+
+Terminated : Dealer is no longer associated with the company.
+Terminated --> [*] : Dealer is archived and removed from active use.
+
+@enduml

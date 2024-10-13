@@ -1,0 +1,18 @@
+@startuml Brand
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Active : Brand is added to the system.
+
+Active : The brand is active and associated with products.
+Active --> Inactive : Brand is temporarily deactivated.
+
+Inactive : The brand is not currently in use.
+Inactive --> Active : Brand is reactivated.
+
+Active --> Discontinued : Brand is permanently discontinued.
+
+Discontinued : The brand is no longer used in new products.
+Discontinued --> [*] : Brand is archived and removed from active use.
+
+@enduml

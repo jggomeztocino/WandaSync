@@ -1,0 +1,33 @@
+@startuml Product
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Draft : New product variation is created.
+
+Draft : The product variation is being prepared and is not yet available.
+Draft --> Active : Product details are completed and published.
+
+Active : The product variation is available for purchase.
+Active --> OnSale : Promotion is applied.
+
+OnSale : The product variation is active and on sale.
+OnSale --> Active : Promotion ends.
+
+Active --> OutOfStock : Stock level reaches zero.
+
+OutOfStock : The product variation is temporarily unavailable due to no stock.
+OutOfStock --> Active : Stock is replenished.
+
+Active --> Discontinued : Product variation is discontinued.
+
+Discontinued : The product variation is no longer available.
+Discontinued --> Inactive : Product is archived.
+
+Active --> Inactive : Product is manually deactivated.
+
+Inactive : The product variation is archived and not visible.
+Inactive --> Active : Product is reactivated.
+
+Inactive --> [*] : Product is permanently removed.
+
+@enduml

@@ -57,7 +57,3 @@ WandaSync is composed of several domains, each managing a specific aspect of the
 ## Conclusion
 
 By focusing on these key domains—**Products** 🛍️, **Users** 👥, **Orders** 🛒, and **Notifications** 🔔—WandaSync ensures that each core functionality is encapsulated within its own microservice. This alignment with hexagonal architecture principles enhances modularity and scalability, allowing the system to efficiently handle essential e-commerce operations while remaining flexible to adapt to future requirements.
-
----
-
-This domain-centric approach not only streamlines development and maintenance but also demonstrates a clear understanding of architectural best practices, making **WandaSync** a robust and adaptable e-commerce platform.

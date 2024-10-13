@@ -1,0 +1,15 @@
+@startuml Category
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Active : New category is created.
+
+Active : The category is active and used for organizing products.
+Active --> Inactive : Category is deactivated.
+
+Inactive : The category is not used but remains in the system.
+Inactive --> Active : Category is reactivated.
+
+Inactive --> [*] : Category is permanently removed from the system.
+
+@enduml

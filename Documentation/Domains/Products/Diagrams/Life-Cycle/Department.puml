@@ -1,0 +1,15 @@
+@startuml Department
+skinparam maxMessageSize 100
+skinparam wrapWidth 400
+
+[*] --> Active : New department is defined.
+
+Active : The department is active and used for product classification.
+Active --> Inactive : Department is deactivated.
+
+Inactive : The department is not currently used.
+Inactive --> Active : Department is reactivated.
+
+Inactive --> [*] : Department is permanently removed.
+
+@enduml
