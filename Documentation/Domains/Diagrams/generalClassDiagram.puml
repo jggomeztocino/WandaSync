@@ -1,0 +1,234 @@
+@startuml General Domain Class Diagram
+title General Domain Class Diagram
+
+' Define domain colors
+!define PRODUCTS_COLOR #ADD8E6
+!define ORDERS_COLOR #CECEF6
+!define USERS_COLOR #CEF6E3
+!define NOTIFICATIONS_COLOR #F6CECE
+
+skinparam package {
+    BackgroundColor<<Products Domain>> PRODUCTS_COLOR
+    BackgroundColor<<Orders Domain>> ORDERS_COLOR
+    BackgroundColor<<Users Domain>> USERS_COLOR
+    BackgroundColor<<Notifications Domain>> NOTIFICATIONS_COLOR
+    BorderColor black
+    FontColor black
+}
+
+' Products Domain
+package "Products Domain" <<Products Domain>> {
+    class ParentProduct {
+        ~ Reference: String
+        --
+        - Brand: Brand
+        - Model: String
+        - Material: String
+        - Season: String
+        - Category: Category
+        - Department: Department
+        - ProductType: ProductType
+        --
+        # ParentStatus: ParentStatus [enum]
+    }
+
+    class Product {
+        ~ EAN: Integer [13]
+        --
+        - Size: String
+        - Color: String
+        - RetailPrice: Float
+        --
+        - / Stock: Integer (Derived)
+        - / DealerPrice: Float (Derived)
+        --
+        # Status: ProductStatus [enum]
+    }
+
+    note left of Product : The stock is calculated as the sum of the stock of all the product dealers
+    note right of Product : The dealer price is the minimum price of all the product dealers
+
+    class Brand {
+        ~ BrandID: Integer
+        --
+        - Name: String
+        - Contact: String
+        --
+        # Status: BrandStatus [enum]
+    }
+
+    class Category {
+        ~ CategoryID: Integer
+        --
+        - Name: String
+        - Description: String
+        - ParentCategory: Category
+        --
+        # Status: CategoryStatus [enum]
+    }
+
+    class Department {
+        ~ DepartmentID: Integer
+        --
+        - Name: String
+        - Description: String
+        --
+        # Status: DepartmentStatus [enum]
+    }
+
+    class Dealer {
+        ~ DealerID: Integer
+        --
+        - Name: String
+        - Description: String
+        - Contact: String
+        --
+        # Status: DealerStatus [enum]
+    }
+
+    class ProductDealer {
+        ~ DealerID: Integer
+        ~ EAN: Integer [13]
+        --
+        - UnitStock: Integer
+        - UnitPrice: Float
+        --
+        # Status: ProductDealerStatus [enum]
+    }
+
+    ' Relationships within Products Domain
+    Product --|> ParentProduct
+
+    ParentProduct "*" --> "1" Brand
+    ParentProduct "*" --> "1" Category
+    ParentProduct "*" --> "1" Department
+
+    Category "0..1" <-- "1" Category : ParentCategory
+
+    Product "1" <-- "*" ProductDealer
+    Dealer "1" <-- "*" ProductDealer
+}
+
+' Orders Domain
+package "Orders Domain" <<Orders Domain>> {
+    class Order {
+        ~ OrderID: Integer
+        --
+        - User: User
+        - OrderDate: DateTime
+        - OrderLines : OrderLine <Collection>
+        - Notes: String
+        --
+        - / TotalAmount: Float (Derived)
+        --
+        # OrderStatus: OrderStatus [enum]
+    }
+
+    note left of Order : The total amount is calculated as the sum of the total price of all the order items
+
+    class OrderLine {
+        ~ OrderLineID: Char
+        --
+        - Product: Product
+        - Quantity: Integer
+        - UnitPrice: Float
+        --
+        - / TotalPrice: Float (Derived)
+        --
+        # OrderItemStatus: OrderItemStatus [enum]
+    }
+
+    note left of OrderLine : The total price is calculated as the unit price multiplied by the quantity
+
+    ' Relationships within Orders Domain
+    Order "1" *-- "1..*" OrderLine
+}
+
+' Users Domain
+package "Users Domain" <<Users Domain>> {
+    class User {
+        ~ UserID: String
+        --
+        - Email: String
+        - FirstName: String
+        - LastName: String
+        - PhoneNumber: String
+        - ShippingAddress: Address
+        - BillingAddress: Address
+        - Credentials: Credentials
+        - Group: Group
+        --
+        # Status: UserStatus [enum]
+    }
+
+    class Credentials {
+        ~ PasswordID: Integer
+        --
+        - PasswordSalt: String
+        - PasswordHash: String
+        --
+        # CredentialsStatus: CredentialsStatus [enum]
+    }
+
+    note right of Credentials : Credentials are archived for security reasons
+
+    class Address {
+        ~ AddressID: Integer
+        --
+        - AddressName: String
+        - Street: String
+        - Number: String
+        - Floor: String
+        - Door: String
+        - City: String
+        - PostalCode: String
+        - Country: String
+        --
+        # AddressStatus: AddressStatus [enum]
+    }
+
+    class Group {
+        ~ GroupID: Integer
+        --
+        - Name: String
+        - Description: String
+        --
+        # GroupStatus: GroupStatus [enum]
+    }
+
+    note bottom of Group : Groups are used to manage user permissions.
+
+    ' Relationships
+    User "1" --> "1" Address : ShippingAddress
+    User "1" --> "1" Address : BillingAddress
+    User "1" --> "1..*" Credentials
+    User "1" --> "1" Group
+}
+
+' Notifications Domain
+package "Notifications Domain" <<Notifications Domain>> {
+    class Notification {
+        ~ NotificationID: Integer
+        --
+        - CreatedDate: DateTime
+        - Message: String
+        - User: User
+        --
+        # NotificationStatus: NotificationStatus [enum]
+    }
+
+    note left of Notification : The message can be plain text, HTML or any valid other format
+}
+
+' Cross-Domain Relationships
+
+' Orders Domain references Products Domain
+OrderLine "1..*" --> "1" Product : contains
+
+' Users Domain references Notifications Domain
+User "1" --> "1..*" Notification : receives
+
+' Users Domain references Orders Domain
+User "1" --> "0..1" Order : places
+
+@enduml

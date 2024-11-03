@@ -12,47 +12,63 @@ WandaSync is composed of several domains, each managing a specific aspect of the
 
 #### Responsibilities
 
-- **Product Management**: Handle product information, including names, descriptions, pricing, and images.
-- **Inventory Management**: Track product availability and stock levels.
+- **Product Management**: Handle product information, including names, descriptions, pricing, images, brand, and attributes.
+- **Inventory Management**: Track product availability and manage stock levels across different dealers.
 
 #### Entities
 
-- **Product**: Represents an item available for purchase, containing details like name, description, price, and images.
+- **ParentProduct**: Represents the general information of a product without specific variations such as size or color. This includes attributes like brand, model, material, and category.
+- **Product**: Represents an item available for purchase, including specific variations like size and color, as well as retail price, stock, and dealer price.
+- **Brand**: Represents the brand associated with a product, including contact information.
+- **Category**: Categorizes products into groups and may have a parent category for hierarchical structuring.
+- **Department**: Represents different departments for products (e.g., Men's, Women's).
+- **Dealer**: Represents the supplier or vendor of a product.
+- **ProductDealer**: Manages the association between a product and its dealer, keeping track of stock and pricing.
 
 ### 2. Users 👥
 
 #### Responsibilities
 
-- **User Information Management**: Store and manage user profiles, including personal information and preferences.
-- **Authentication and Authorization**: Handle user login, registration, and access control.
-- **Order History**: Maintain a record of past orders for each user.
+- **User Information Management**: Store and manage user profiles, including personal information, contact details, and group memberships.
+- **Authentication and Authorization**: Handle user credentials and group-based permissions.
+- **Address Management**: Store and manage multiple addresses for billing and shipping purposes.
 
 #### Entities
 
-- **User**: Represents a customer with personal information, credentials, and preferences.
+- **User**: Represents a customer with personal information, credentials, billing and shipping addresses, and group association.
+- **Credentials**: Manages user credentials securely, including password information.
+- **Address**: Represents addresses for billing and shipping purposes.
+- **Group**: Defines user groups to manage permissions and group-specific functionalities.
 
 ### 3. Orders 🛒
 
 #### Responsibilities
 
 - **Order Processing**: Create and manage orders placed by users.
-- **Status Tracking**: Monitor the order status from initiation to fulfillment.
-- **Order Validation**: Ensure that orders meet all criteria before processing (e.g., product availability).
+- **Order Line Items**: Manage individual products within an order, including their quantities and prices.
+- **Order Summary and Validation**: Calculate total order amounts and ensure that orders meet all criteria before processing.
 
 #### Entities
 
-- **Order**: Represents a purchase transaction, including user information, items ordered, total cost, and status.
-- **OrderItem**: An individual product within an order, including quantity and price. This entity is part of the order aggregate and will reference a product entity.
+- **Order**: Represents a purchase transaction, including the user who placed it, the order date, and its status.
+- **OrderLine**: Represents an item within an order, including the product, quantity, and price. The total price is derived based on the unit price and quantity.
 
 ### 4. Notifications 🔔
 
 #### Responsibilities
 
-- **Event-Based Notifications**: Send alerts to users based on events like order status updates.
+- **Event-Based Notifications**: Send alerts to users based on system events, such as order status updates.
+- **Message Management**: Manage the content of notifications and ensure they reach the correct user.
 
 #### Entities
 
-- **Notification**: A message intended for the user, including content, type, and delivery channel.
+- **Notification**: Represents a message intended for a user, including details like creation date, content, and user association.
+
+## General Domain Class Diagram
+
+The following diagram illustrates the relationships and structure of the different domains within WandaSync. Each domain encapsulates entities with specific responsibilities, which communicate across boundaries via defined relationships.
+
+![General Domain Class Diagram](./Diagrams/General%20Domain%20Class%20Diagram.png)
 
 ## Conclusion
 
