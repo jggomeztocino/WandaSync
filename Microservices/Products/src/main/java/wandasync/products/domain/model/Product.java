@@ -1,6 +1,8 @@
 package wandasync.products.domain.model;
 
 import lombok.*;
+import wandasync.products.shared.exception.InvalidProductStateException;
+
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -37,5 +39,18 @@ public class Product {
         AVAILABLE,
         OUT_OF_STOCK,
         DISCONTINUED
+    }
+
+    public void setStatus(String status) throws InvalidProductStateException {
+        if (status == null) {
+            throw new InvalidProductStateException("Product status is required");
+        }
+        if (status.isEmpty()) {
+            throw new InvalidProductStateException("Product status is required");
+        }
+        if (status.equals(this.status.name())) {
+            return;
+        }
+        this.status = ProductStatus.valueOf(status.toUpperCase());
     }
 }
